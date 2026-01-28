@@ -326,7 +326,7 @@ int main() {
             continue;
         }
 
-        std::string filename = (mode == 1) ? "v42_erg.csv" : "v42_grade.csv";
+        std::string filename = (mode == 1) ? "mk_erg.csv" : "mk_grade.csv";
         FILE* log = fopen(filename.c_str(), "w");
         if(log) fprintf(log, "Zeit;Ist_Watt;RPM;Speed;Distanz;Ziel;Modus\n");
 
