@@ -76,7 +76,7 @@ sudo ./tacx_trainer
 * `src/trainer.cpp`: Die Logik. Enthält den USB-Treiber, das Protokoll und den Hintergrund-Thread.
 * `src/shared_data.h`: Datenaustausch zwischen GUI und Trainer-Logik.
 
-
+```bash
 TacxTrainer/
 ├── build.sh               # Das Kompilier-Skript
 ├── README.md              # Projekt-Dokumentation
@@ -94,3 +94,5 @@ TacxTrainer/
         ├── imgui.cpp
         ├── imgui_draw.cpp
         └── ...
+
+
