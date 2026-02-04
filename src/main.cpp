@@ -11,49 +11,61 @@
 
 int main(int, char**)
 {
+    // 1. Hardware Init (SDL Bibliothek für Fenster & Input)
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) != 0) return -1;
+
+    // OpenGL ES 2.0 Profil für Raspberry Pi setzen (ressourcensparend)
     const char* glsl_version = "#version 100";
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, 0);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
 
+    // Fenster erstellen (1024x600 px)
     SDL_WindowFlags window_flags = (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
-    // 1024x600 ist eine gute Startgröße für Pi Touchscreens
     SDL_Window* window = SDL_CreateWindow("Tacx Visu", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1024, 600, window_flags);
     SDL_GLContext gl_context = SDL_GL_CreateContext(window);
     SDL_GL_MakeCurrent(window, gl_context);
-    SDL_GL_SetSwapInterval(1); // V-Sync an
+    SDL_GL_SetSwapInterval(1); // V-Sync aktivieren (verhindert "Tearing" des Bildes)
 
+    // 2. GUI System (ImGui) starten
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGui::StyleColorsDark();
+    ImGui::GetIO().FontGlobalScale = 2.0f; // Alles 2x größer für Lesbarkeit
     
-    // Schriftgröße Skalierung
-    ImGui::GetIO().FontGlobalScale = 2.0f;
-    
+    // Verknüpfung von ImGui mit SDL und OpenGL
     ImGui_ImplSDL2_InitForOpenGL(window, gl_context);
     ImGui_ImplOpenGL3_Init(glsl_version);
 
-    SharedData data;
+    // 3. Logik starten
+    SharedData data; // Unser zentraler Datenspeicher
+    
+    // Startet den Trainer-Code in einem PARALLELEN Thread.
+    // Wichtig: 'run_trainer_thread' läuft jetzt im Hintergrund weiter.
     std::thread trainer_thread(run_trainer_thread, &data);
 
-    ImVec4 clear_color = ImVec4(0.10f, 0.10f, 0.10f, 1.00f); // Hintergrund fast schwarz
+    ImVec4 clear_color = ImVec4(0.10f, 0.10f, 0.10f, 1.00f); // Hintergrundfarbe
     
+    // 4. Die Hauptschleife (läuft bis User beendet)
     while (data.app_running)
     {
+        // Eingaben verarbeiten (Maus, Tastatur, Fenster schließen)
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
             ImGui_ImplSDL2_ProcessEvent(&event);
             if (event.type == SDL_QUIT) data.app_running = false;
         }
 
+        // Neuen Frame vorbereiten
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplSDL2_NewFrame();
         ImGui::NewFrame();
 
+        // Unsere GUI zeichnen (ruft Code in gui.cpp auf)
         RenderDashboard(&data);
 
+        // Alles auf den Bildschirm bringen (Rendern)
         ImGui::Render();
         glViewport(0, 0, (int)ImGui::GetIO().DisplaySize.x, (int)ImGui::GetIO().DisplaySize.y);
         glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
@@ -61,13 +73,13 @@ int main(int, char**)
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         SDL_GL_SwapWindow(window);
         
-        // +++ DIE HANDBREMSE +++
-        // Wartet 30ms. Das ergibt ca. 33 FPS.
-        // Das gibt die CPU für LibreOffice & Co. frei!
+        // CPU-Bremse: 30ms warten -> Ergibt ca. 30 FPS.
+        // Ohne das würde der Pi 100% CPU nutzen nur um das Menü zu zeichnen.
         SDL_Delay(30); 
     }
 
-    if (trainer_thread.joinable()) trainer_thread.join();
+    // 5. Aufräumen beim Beenden
+    if (trainer_thread.joinable()) trainer_thread.join(); // Warten bis Trainer Thread fertig ist
 
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplSDL2_Shutdown();
