@@ -5,10 +5,10 @@ Ein grafisches Dashboard zur Steuerung eines **Tacx Vortex (T2180)** Rollentrain
 
 ## Features
 
-* **Live Telemetrie:** Anzeige von Watt, Geschwindigkeit und Trittfrequenz.
+* **Live Telemetrie:** Anzeige von Leistung, Geschwindigkeit und Trittfrequenz.
 * **ERG Modus:** Der Trainer hält eine Ziel-Leistung (Watt) konstant, egal wie schnell man tritt.
 * **Grade Modus:** Simulation von Steigungen (in %).
-* **Daten-Logging:** Aufzeichnung des Trainings als `.csv` Datei (Zeit, Watt, Speed, Cadence, Zielwerte).
+* **Daten-Logging:** Aufzeichnung des Trainings als `.csv` Datei (Zeit, Power, Speed, Cadence, Zielwerte).
 * **Kalibrierung:** Echtzeit-Anpassung der Bremsstärke (Faktor) für ERG und Steigung direkt in der GUI.
 * **Touch & Keyboard:** Bedienung über Touchscreen oder Tastatur (+/- Tasten).
 
@@ -17,7 +17,7 @@ Ein grafisches Dashboard zur Steuerung eines **Tacx Vortex (T2180)** Rollentrain
 Das Projekt wurde auf einem Raspberry Pi 5 (Raspberry Pi OS) entwickelt.
 
 ### 1. System-Pakete installieren
-Du benötigst den C++ Compiler, SDL2 (für das Fenster) und libusb (für den Trainer):
+Du benötigst den C++ Compiler, SDL2 (für die Anzeige) und libusb (für die Trainer Verbindung):
 
 ```bash
 sudo apt-get update
