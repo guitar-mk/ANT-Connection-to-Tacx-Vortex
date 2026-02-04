@@ -76,3 +76,21 @@ sudo ./tacx_trainer
 * `src/trainer.cpp`: Die Logik. Enthält den USB-Treiber, das Protokoll und den Hintergrund-Thread.
 * `src/shared_data.h`: Datenaustausch zwischen GUI und Trainer-Logik.
 
+
+TacxTrainer/
+├── build.sh               # Das Kompilier-Skript
+├── README.md              # Projekt-Dokumentation
+├── tacx_trainer           # Das fertige Programm (nach dem Kompilieren)
+├── my_trainer.txt         # Speichert die ID deines Trainers (automatisch erstellt)
+├── src/
+│   ├── main.cpp           # Hauptprogramm (Start, Fenster, Loop)
+│   ├── gui.cpp            # Zeichnet das Dashboard (ImGui Code)
+│   ├── gui.h              # Header für GUI
+│   ├── trainer.cpp        # USB-Treiber & Hardware-Logik
+│   ├── trainer.h          # Header für Trainer
+│   └── shared_data.h      # Datenaustausch zwischen GUI & Logik
+└── include/
+    └── imgui/             # Die Grafik-Bibliothek (externe Abhängigkeit)
+        ├── imgui.cpp
+        ├── imgui_draw.cpp
+        └── ...
