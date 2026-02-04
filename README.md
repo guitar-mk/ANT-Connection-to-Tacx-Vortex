@@ -1,9 +1,10 @@
 # :tv: :bicyclist:
 # Tacx Vortex Trainer Controller (C++ / ImGui)
 
-![screenshot](/gui.png)
-
-//![alt text](https://github.com/guitar-mk/ANT-Connection-to-Tacx-Vortex/blob/main/gui.png)
+<p align="center">
+  <img src="/gui.png" width="350" title="hover text">
+  <img src="/gui.png" width="350" alt="accessibility text">
+</p>
 
 Ein grafisches Dashboard zur Steuerung eines **Tacx Vortex (T2180)** Rollentrainers über USB/ANT+ auf dem Raspberry Pi. Das Projekt nutzt **Dear ImGui** für die Oberfläche und **libusb** für die direkte Hardware-Kommunikation.
 
