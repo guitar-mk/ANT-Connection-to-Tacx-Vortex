@@ -1,8 +1,8 @@
-# Tacx Vortex Trainer Controller (C++ / ImGui)
+Iy Tacx Vortex Trainer Controller (C++ / ImGui)
 
 Ein grafisches Dashboard zur Steuerung eines **Tacx Vortex (T2180)** Rollentrainers über USB/ANT+ auf dem Raspberry Pi. Das Projekt nutzt **Dear ImGui** für die Oberfläche und **libusb** für die direkte Hardware-Kommunikation.
 
-## 🚀 Features
+## Features
 
 * **Live Telemetrie:** Anzeige von Watt, Geschwindigkeit und Trittfrequenz.
 * **ERG Modus:** Der Trainer hält eine Ziel-Leistung (Watt) konstant, egal wie schnell man tritt.
@@ -11,72 +11,67 @@ Ein grafisches Dashboard zur Steuerung eines **Tacx Vortex (T2180)** Rollentrain
 * **Kalibrierung:** Echtzeit-Anpassung der Bremsstärke (Faktor) für ERG und Steigung direkt in der GUI.
 * **Touch & Keyboard:** Bedienung über Touchscreen oder Tastatur (+/- Tasten).
 
-## 🛠️ Voraussetzungen & Installation
+## Voraussetzungen & Installation
 
 Das Projekt wurde auf einem Raspberry Pi 5 (Raspberry Pi OS) entwickelt.
 
 ### 1. System-Pakete installieren
 Du benötigst den C++ Compiler, SDL2 (für das Fenster) und libusb (für den Trainer):
 
-
+```bash
 sudo apt-get update
 sudo apt-get install build-essential git
 sudo apt-get install libsdl2-dev
 sudo apt-get install libusb-1.0-0-dev
+```
 
-2. Projekt vorbereiten
+### 2. Projekt vorbereiten
 
 Falls du das Projekt frisch startest:
-Bash
 
+```bash
 # In den Projektordner wechseln
 cd TacxTrainer
 
 # ImGui (GUI Bibliothek) muss im Ordner 'include/imgui' liegen
 # Falls der Ordner leer ist, führe das aus:
 git clone [https://github.com/ocornut/imgui.git](https://github.com/ocornut/imgui.git) include/imgui
+```
 
-🏗️ Kompilieren
+## Kompilieren
 
-Ein Build-Skript liegt bei (build.sh). Es kompiliert alle C++ Dateien und linkt die Bibliotheken.
-Bash
+Ein Build-Skript liegt bei (`build.sh`). Es kompiliert alle C++ Dateien und linkt die Bibliotheken.
 
+```bash
 chmod +x build.sh  # Einmalig ausführbar machen
 ./build.sh
+```
 
-▶️ Starten
+## Starten
 
-Da wir direkt auf USB-Hardware zugreifen, werden (ohne udev-Regel) Root-Rechte benötigt:
-Bash
+Da wir direkt auf USB-Hardware zugreifen, werden (ohne udev-Regel) **Root-Rechte** benötigt:
 
+```bash
 sudo ./tacx_trainer
+```
 
-    Das Programm startet und sucht den Trainer (Status: "SUCHE...").
+1.  Das Programm startet und sucht den Trainer (Status: "SUCHE...").
+2.  **Tritt in die Pedale**, um den Trainer aufzuwecken (ANT+ Stick blinkt).
+3.  Sobald die Verbindung steht (Status: "VERBUNDEN"), erscheinen die Werte.
 
-    Tritt in die Pedale, um den Trainer aufzuwecken (ANT+ Stick blinkt).
+## Steuerung
 
-    Sobald die Verbindung steht (Status: "VERBUNDEN"), erscheinen die Werte.
+* **Modus wechseln:** Klick auf "ERG" oder "Grade" in der GUI.
+* **Werte ändern:**
+    * Schieberegler in der GUI.
+    * Tasten `+` und `-` (Numpad oder normal) auf der Tastatur.
+* **Aufnahme:** Button "START REC" oben rechts. CSV-Dateien landen im Programmordner.
+* **Kalibrierung:** Unten im Dashboard können Faktoren für Watt und Steigung eingestellt werden ("ERG Härte").
 
-⌨️ Steuerung
+## Projektstruktur
 
-    Modus wechseln: Klick auf "ERG" oder "Grade" in der GUI.
+* `src/main.cpp`: Startpunkt, Initialisierung von SDL/OpenGL und Thread-Start.
+* `src/gui.cpp`: Zeichnet das Dashboard (ImGui Code).
+* `src/trainer.cpp`: Die Logik. Enthält den USB-Treiber, das Protokoll und den Hintergrund-Thread.
+* `src/shared_data.h`: Datenaustausch zwischen GUI und Trainer-Logik.
 
-    Werte ändern:
-
-        Schieberegler in der GUI.
-
-        Tasten + und - (Numpad oder normal) auf der Tastatur.
-
-    Aufnahme: Button "START REC" oben rechts. CSV-Dateien landen im Programmordner.
-
-    Kalibrierung: Unten im Dashboard können Faktoren für Watt und Steigung eingestellt werden ("ERG Härte").
-
-📂 Projektstruktur
-
-    src/main.cpp: Startpunkt, Initialisierung von SDL/OpenGL und Thread-Start.
-
-    src/gui.cpp: Zeichnet das Dashboard (ImGui Code).
-
-    src/trainer.cpp: Die Logik. Enthält den USB-Treiber, das Protokoll und den Hintergrund-Thread.
-
-    src/shared_data.h: Datenaustausch zwischen GUI und Trainer-Logik.
