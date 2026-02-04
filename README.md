@@ -2,8 +2,6 @@
 
 Ein grafisches Dashboard zur Steuerung eines **Tacx Vortex (T2180)** Rollentrainers über USB/ANT+ auf dem Raspberry Pi. Das Projekt nutzt **Dear ImGui** für die Oberfläche und **libusb** für die direkte Hardware-Kommunikation.
 
-![Status](https://img.shields.io/badge/Status-Beta-orange) ![Platform](https://img.shields.io/badge/Platform-Raspberry_Pi_5-red)
-
 ## 🚀 Features
 
 * **Live Telemetrie:** Anzeige von Watt, Geschwindigkeit und Trittfrequenz.
@@ -20,8 +18,65 @@ Das Projekt wurde auf einem Raspberry Pi 5 (Raspberry Pi OS) entwickelt.
 ### 1. System-Pakete installieren
 Du benötigst den C++ Compiler, SDL2 (für das Fenster) und libusb (für den Trainer):
 
-```bash
+
 sudo apt-get update
 sudo apt-get install build-essential git
-sudo apt-get install libsdl2-dev       # Für Grafik/Fenster
-sudo apt-get install libusb-1.0-0-dev  # Für USB Zugriff auf den Tacx
+sudo apt-get install libsdl2-dev
+sudo apt-get install libusb-1.0-0-dev
+
+2. Projekt vorbereiten
+
+Falls du das Projekt frisch startest:
+Bash
+
+# In den Projektordner wechseln
+cd TacxTrainer
+
+# ImGui (GUI Bibliothek) muss im Ordner 'include/imgui' liegen
+# Falls der Ordner leer ist, führe das aus:
+git clone [https://github.com/ocornut/imgui.git](https://github.com/ocornut/imgui.git) include/imgui
+
+🏗️ Kompilieren
+
+Ein Build-Skript liegt bei (build.sh). Es kompiliert alle C++ Dateien und linkt die Bibliotheken.
+Bash
+
+chmod +x build.sh  # Einmalig ausführbar machen
+./build.sh
+
+▶️ Starten
+
+Da wir direkt auf USB-Hardware zugreifen, werden (ohne udev-Regel) Root-Rechte benötigt:
+Bash
+
+sudo ./tacx_trainer
+
+    Das Programm startet und sucht den Trainer (Status: "SUCHE...").
+
+    Tritt in die Pedale, um den Trainer aufzuwecken (ANT+ Stick blinkt).
+
+    Sobald die Verbindung steht (Status: "VERBUNDEN"), erscheinen die Werte.
+
+⌨️ Steuerung
+
+    Modus wechseln: Klick auf "ERG" oder "Grade" in der GUI.
+
+    Werte ändern:
+
+        Schieberegler in der GUI.
+
+        Tasten + und - (Numpad oder normal) auf der Tastatur.
+
+    Aufnahme: Button "START REC" oben rechts. CSV-Dateien landen im Programmordner.
+
+    Kalibrierung: Unten im Dashboard können Faktoren für Watt und Steigung eingestellt werden ("ERG Härte").
+
+📂 Projektstruktur
+
+    src/main.cpp: Startpunkt, Initialisierung von SDL/OpenGL und Thread-Start.
+
+    src/gui.cpp: Zeichnet das Dashboard (ImGui Code).
+
+    src/trainer.cpp: Die Logik. Enthält den USB-Treiber, das Protokoll und den Hintergrund-Thread.
+
+    src/shared_data.h: Datenaustausch zwischen GUI und Trainer-Logik.
