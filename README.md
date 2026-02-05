@@ -17,17 +17,18 @@ Ein grafisches Dashboard zur Steuerung eines **Tacx Vortex (T2180)** Rollentrain
 * **Touch & Keyboard:** Bedienung über Touchscreen oder Tastatur (+/- Tasten).
 
 ## Voraussetzungen & Installation
-
-Das Projekt wurde auf einem Raspberry Pi 5 (Raspberry Pi OS) entwickelt.
+- Raspberry Pi 5 (Raspberry Pi OS)
+- Tacx Vortex T2180 - Rollentrainer
+- Tacx ANT+ USB-Antenne T2028
 
 ### 1. System-Pakete installieren
 Du benötigst den C++ Compiler, SDL2 (für die Anzeige) und libusb (für die Trainer Verbindung):
 
 ```bash
-sudo apt-get update
-sudo apt-get install build-essential git
-sudo apt-get install libsdl2-dev
-sudo apt-get install libusb-1.0-0-dev
+sudo apt-get update                          
+sudo apt-get install build-essential git    # C++ Umgebung
+sudo apt-get install libsdl2-dev            # SDL2 für Grafikprogrammierung (ImGui)
+sudo apt-get install libusb-1.0-0-dev       # USB-Zugriff auf ANT+ -Stick
 ```
 
 ### 2. Projekt vorbereiten
